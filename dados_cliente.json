@@ -1,0 +1,1 @@
+[{"nome": "claudio", "email": "claudio@gmail.com", "senha": "1978", "carrinho": [{"name": "coca", "valor": 20.0, "quantidade": 1}], "pedidos": []}, {"nome": "Lucas", "email": "labraao@exemplo.com", "senha": "123456", "carrinho": [{"name": "fanta", "valor": 10.0, "quantidade": 0}], "pedidos": []}]
