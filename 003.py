@@ -55,22 +55,26 @@ while True:
                     )
                     opcao = int(input("Opção selecionada: "))
                     if opcao == 1:
-                        print("Deseja:\n(1)Adicionar produto;\n(2)Localizar produto;\n(3)Remover produto;\n(4)Alterar "
-                              "produto;\n(5)Voltar")
+                        print(
+                            "Deseja:\n(1)Adicionar produto;\n(2)Localizar produto;\n(3)Remover produto;\n(4)Alterar "
+                            "produto;\n(5)Voltar"
+                        )
                         opcao = int(input("Opção selecionada: "))
+
+                        def gerar_novo_id():
+                            return len(empresa["itens"]) + 1
+
                         if opcao == 1:
+                            x = 0
+
                             name = input("Nome do Produto: ")
                             value = float(input("Valor do Produto: "))
                             unit = int(input("Quantas unidades desse produto: "))
                             department = input(
                                 "Esse produto ira pertencer a qual departamento? "
                             )
-                            novo_departamento = {
-                                "name": name,
-                                "valor": value,
-                                "quantidade": unit,
-                                "avaliações": "",
-                            }
+                            novo_id = gerar_novo_id()
+                            novo_departamento = {"id": novo_id}
                             if department not in empresa:
                                 empresa[department] = []
 
@@ -82,6 +86,7 @@ while True:
                                 "name": name,
                                 "valor": value,
                                 "quantidade": unit,
+                                "id": novo_id,
                             }
                             empresa["itens"].append(item)
                             print("Empresa Cadastrada!!")
@@ -96,13 +101,16 @@ while True:
                                 itens_encontrados: list[str] = []
 
                                 for item in empresa["itens"]:
-                                    if nome_produto.lower() in item["name"].lower():
+                                    if (
+                                        nome_produto.lower() in item["name"].lower()
+                                        or nome_produto.lower()
+                                        in str(item["id"]).lower()
+                                    ):
                                         itens_encontrados.append(item)
 
                                 return itens_encontrados
 
-
-                            print("Qual nome do item que deseja localizar?")
+                            print("Qual nome/id do item que deseja localizar?")
                             name = input("Produto: ")
                             itens_encontrados = buscar_item(name)
                             if not itens_encontrados:
@@ -117,15 +125,19 @@ while True:
                                     )
 
                         if opcao == 3:
+
                             def buscar_item(nome_produto):
                                 itens_encontrados = []
 
                                 for item in empresa["itens"]:
-                                    if nome_produto.lower() in item["name"].lower():
+                                    if (
+                                        nome_produto.lower() in item["name"].lower()
+                                        or nome_produto.lower()
+                                        in str(item["id"]).lower()
+                                    ):
                                         itens_encontrados.append(item)
 
                                 return itens_encontrados
-
 
                             print("Qual item deseja remover?")
                             name = input("Produto: ")
@@ -135,7 +147,9 @@ while True:
 
                             else:
                                 for item in itens_encontrados:
-                                    print(f'Produto localizado: {item["name"].capitalize()}')
+                                    print(
+                                        f'Produto localizado: {item["name"].capitalize()}'
+                                    )
                                 print()
                                 print("Cofirma remoção?\n(1)Sim;\n(2)Não;")
                                 opcao = int(input("Confirma?"))
@@ -150,23 +164,25 @@ while True:
                                     print("Remoção Cancelada!!")
 
                         if opcao == 4:
+
                             def buscar_item(nome_produto):
                                 itens_encontrados = []
 
                                 for item in empresa["itens"]:
-                                    if nome_produto.lower() in item["name"].lower():
+                                    if (
+                                        nome_produto.lower() in item["name"].lower()
+                                        or nome_produto.lower()
+                                        in str(item["id"]).lower()
+                                    ):
                                         itens_encontrados.append(item)
 
                                 return itens_encontrados
-
 
                             def atualizar_quantidade(nome, nova_quantidade):
                                 for departamento in empresa.values():
                                     for item in departamento:
                                         if item["name"].lower() == nome.lower():
                                             item["quantidade"] = nova_quantidade
-
-
 
                             print("Qual produto deseja alterar?")
                             name = input("Produto:")
@@ -187,10 +203,10 @@ while True:
                                     print(f"Confirma novo nome?\n(1)Sim;\n(2)Não;")
                                     opcao_confirmacao = int(input("Confirma? "))
                                     if opcao_confirmacao == 1:
-                                        for item in itens_encontrados:  # Adicionado loop para alterar todos os itens encontrados
+                                        for item in itens_encontrados:
                                             item["name"] = newName
                                         print("Nome do produto alterado!")
-                                        # Atualizar também nos departamentos
+
                                         atualizar_quantidade(name, newName)
 
                                     if opcao_confirmacao == 2:
@@ -202,7 +218,11 @@ while True:
                                     print(f"Confirma novo valor?\n(1)Sim;\n(2)Não;")
                                     opcao_confirmacao = int(input("Confirma?"))
                                     if opcao_confirmacao == 1:
-                                        for item in itens_encontrados:  # Adicionado loop para alterar todos os itens encontrados
+                                        for (
+                                            item
+                                        ) in (
+                                            itens_encontrados
+                                        ):  # Adicionado loop para alterar todos os itens encontrados
                                             item["valor"] = newValor
                                         with open("dados.json", "w") as arquivo:
                                             json.dump(empresas, arquivo)
@@ -218,7 +238,11 @@ while True:
                                     print(f"Confirma novo estoque?\n(1)Sim;\n(2)Não;")
                                     opcao_confirmacao = int(input("Confirma? "))
                                     if opcao_confirmacao == 1:
-                                        for item in itens_encontrados:  # Adicionado loop para alterar todos os itens encontrados
+                                        for (
+                                            item
+                                        ) in (
+                                            itens_encontrados
+                                        ):  # Adicionado loop para alterar todos os itens encontrados
                                             item["quantidade"] = newEstoque
                                         with open("dados.json", "w") as arquivo:
                                             json.dump(empresas, arquivo)
@@ -234,7 +258,6 @@ while True:
                                     print()
                         if opcao == 5:
                             print()
-
 
                     elif opcao == 2:
                         print(
@@ -273,6 +296,7 @@ while True:
                                     f"O departamento {departamento_remover} não foi encontrado"
                                 )
                         if opcao == 3:
+
                             def buscar_departamento(nome_parcial):
                                 dep_encontrados = []
 
@@ -282,24 +306,33 @@ while True:
 
                                 return dep_encontrados
 
-
                             valor_pra_excluir = ["nome", "email", "senha", "itens"]
                             print("Esses são todos os departamentos:")
                             for chave in empresa:
                                 if chave not in valor_pra_excluir:
                                     print(f"{chave}")
 
-                            print("\nDeseja visualizar os produtos de algum destes departamentos?")
-                            departamento_pesquisar = input("Digite o nome do departamento ou 'n' para voltar: ")
+                            print(
+                                "\nDeseja visualizar os produtos de algum destes departamentos?"
+                            )
+                            departamento_pesquisar = input(
+                                "Digite o nome do departamento ou 'n' para voltar: "
+                            )
 
-                            dep_encontrados = buscar_departamento(departamento_pesquisar)
+                            dep_encontrados = buscar_departamento(
+                                departamento_pesquisar
+                            )
                             if not dep_encontrados:
                                 print("Nenhum departamento encontrado")
                             if departamento_pesquisar == "n":
                                 print("")
                             else:
                                 for item in dep_encontrados:
-                                    print(f'Nome: {item["name"]}\nValor: {item["valor"]}\nUnit: {item["quantidade"]}')
+                                    for produto in empresa["itens"]:
+                                        if produto["id"] == item["id"]:
+                                            print(
+                                                f'Nome: {produto["name"]}\nValor: {produto["valor"]}\nUnit: {produto["quantidade"]}'
+                                            )
 
                         if opcao == 4:
                             print()
@@ -323,7 +356,8 @@ while True:
                     "email": email_cliente,
                     "senha": senha_cliente,
                     "carrinho": [],
-                    "pedidos": []
+                    "pedidos": [],
+                    "cartoes": []
                 }
                 clientes.append(cliente)
                 print("Cliente Cadastrado!!")
@@ -340,7 +374,10 @@ while True:
             email = input("Email: ")
             print("Digite a senha: ")
             senha = input("Senha: ")
-            cliente_encontrado = next((p for p in clientes if p['email'] == email and p['senha'] == senha), None)
+            cliente_encontrado = next(
+                (p for p in clientes if p["email"] == email and p["senha"] == senha),
+                None,
+            )
             if cliente_encontrado is None:
                 print("Email ou senha inválidos!")
             else:
@@ -348,14 +385,14 @@ while True:
                 print(
                     "Deseja ver:\n(1)Ver empresar parceiras;\n(2)Ver carrinho\n(3)Acessar perfil\n(4)Sair"
                 )
-                opcao = int(input("Opção selecionada"))
+                opcao = int(input("Opção selecionada: "))
                 if opcao == 1:
                     for empresa in empresas:
                         print(empresa["nome"])
                     print("Deseja acessar alguma dessas empresa?\n(1)Sim;\n(2)Não;")
-                    opcao = int(input("Opção selecionada"))
+                    opcao = int(input("Opção selecionada: "))
                     if opcao == 1:
-                        print("Qual?")
+                        print("Qual? ")
                         acessar_empresa = input("Empresa:")
 
                         empresa_encontrada = next(
@@ -368,11 +405,10 @@ while True:
                         )
 
                         if empresa_encontrada is not None:
-                            print(
-                                "Deseja:\n(1)Pequisar produto\n(2)Ver departamento\n"
-                            )
+                            print("Deseja:\n(1)Pequisar produto\n(2)Ver departamento\n")
                             opcao = int(input("Opção selecionada:"))
                         if opcao == 1:
+
                             def buscar_item(nome_produto):
                                 itens_encontrados = []
 
@@ -382,7 +418,6 @@ while True:
 
                                 return itens_encontrados
 
-
                             nome = input("Digite o nome do produto")
                             itens_encontrados = buscar_item(nome)
 
@@ -391,16 +426,20 @@ while True:
                             else:
                                 print("Produtos localizados:")
                                 for item in itens_encontrados:
-                                    print(f'Nome: {item["name"]}\n'
-                                          f'Valor:{item["valor"]}'
-                                          )
+                                    print(
+                                        f'Nome: {item["name"]}\n'
+                                        f'Valor:{item["valor"]}'
+                                    )
                                     if item["quantidade"] == 0:
-                                        print("Produto indisponivel")
+                                        print("Estoque: Produto indisponivel")
                                     else:
                                         print(f'Estoque: {item["quantidade"]}')
                             print("Deseja adicionar algum desses itens no carrinho?")
                             produto_adicionar = input("Digite o produto ou 'n': ")
-                            itens_encontrados = buscar_item(produto_adicionar)
+                            if produto_adicionar == "n":
+                                break
+                            else:
+                                itens_encontrados = buscar_item(produto_adicionar)
                             if not itens_encontrados:
                                 print("Produto não encontrado")
                             else:
@@ -413,11 +452,15 @@ while True:
                                         item_carrinho = {
                                             "name": item["name"],
                                             "valor": item["valor"],
-                                            "quantidade": quantidade_desejada
+                                            "quantidade": quantidade_desejada,
                                         }
-                                        nova_quantidade = item["quantidade"] - quantidade_desejada
+                                        nova_quantidade = (
+                                            item["quantidade"] - quantidade_desejada
+                                        )
                                         item["quantidade"] = nova_quantidade
-                                        cliente_encontrado['carrinho'].append(item_carrinho)
+                                        cliente_encontrado["carrinho"].append(
+                                            item_carrinho
+                                        )
                                         print("Produto adicionado ao carrinho!")
                                         with open("dados.json", "w") as arquivo:
                                             json.dump(empresas, arquivo)
@@ -426,6 +469,16 @@ while True:
                             if produto_adicionar == "n":
                                 print("")
                         if opcao == 2:
+
+                            def buscar_item(nome_produto):
+                                itens_encontrados = []
+
+                                for item in empresa_encontrada["itens"]:
+                                    if nome_produto.lower() in item["name"].lower():
+                                        itens_encontrados.append(item)
+
+                                return itens_encontrados
+
                             def buscar_departamento(nome_parcial):
                                 dep_encontrados = []
 
@@ -435,21 +488,152 @@ while True:
 
                                 return dep_encontrados
 
-
                             valor_pra_excluir = ["nome", "email", "senha", "itens"]
                             print("Esses são todos os departamentos:")
                             for chave in empresa_encontrada:
                                 if chave not in valor_pra_excluir:
                                     print(f"{chave}")
 
-                            print("\nDeseja visualizar os produtos de algum destes departamentos?")
-                            departamento_pesquisar = input("Digite o nome do departamento ou 'n' para voltar: ")
+                            print(
+                                "\nDeseja visualizar os produtos de algum destes departamentos?"
+                            )
+                            departamento_pesquisar = input(
+                                "Digite o nome do departamento ou 'n' para voltar: "
+                            )
 
-                            dep_encontrados = buscar_departamento(departamento_pesquisar)
+                            dep_encontrados = buscar_departamento(
+                                departamento_pesquisar
+                            )
                             if not dep_encontrados:
                                 print("Nenhum departamento encontrado")
                             if departamento_pesquisar == "n":
                                 print("")
                             else:
                                 for item in dep_encontrados:
-                                    print(f'Nome: {item["name"]}\nValor: {item["valor"]}\nUnit: {item["quantidade"]}')
+                                    for produto in empresa["itens"]:
+                                        if produto["id"] == item["id"]:
+                                            print(
+                                                f'Nome: {produto["name"]}\nValor: {produto["valor"]}\nUnit: {produto["quantidade"]}'
+                                            )
+                            add_produto = input(
+                                "Deseja adicionar alguem desses produtos ao carrinho?\nDigite nome do produto ou 'n': "
+                            )
+                            itens_encontrados = buscar_item(add_produto)
+                            if add_produto == "n":
+                                break
+                            if not itens_encontrados:
+                                print("Produto não localizado!!")
+                            else:
+                                print("Deseja quantas unidade desse produto?")
+                                quantidade_desejada = int(input("Informe quantidade: "))
+                            for item in itens_encontrados:
+                                if quantidade_desejada > item["quantidade"]:
+                                    print("Infelizmente n temos tantos produtos")
+                                else:
+                                    item_carrinho = {
+                                        "name": item["name"],
+                                        "valor": item["valor"],
+                                        "quantidade": quantidade_desejada,
+                                    }
+                                    nova_quantidade = (
+                                        item["quantidade"] - quantidade_desejada
+                                    )
+                                    item["quantidade"] = nova_quantidade
+                                    cliente_encontrado["carrinho"].append(item_carrinho)
+                                    print("Produto adicionado ao carrinho!")
+                                    with open("dados.json", "w") as arquivo:
+                                        json.dump(empresas, arquivo)
+                                    with open("dados_cliente.json", "w") as arquivo:
+                                        json.dump(clientes, arquivo)
+
+                if opcao == 2:
+                    total_valor = 0
+                    vercarrinho = cliente_encontrado["carrinho"]
+                    for item in vercarrinho:
+                        total_valor = sum(
+                            item["valor"] * item["quantidade"] for item in vercarrinho
+                        )
+                        print(
+                            f'Nome: {item["name"]}\nValor: {item["valor"]}\nUnit: {item["quantidade"]}'
+                        )
+
+                    print(f"Total: {total_valor}")
+                    print(
+                        "(1)Finalizar compra\n(2)Retirar item\n(3)Esvaziar carrinho\n(4)Sair"
+                    )
+                    opcao = int(input("Opção selecionada: "))
+                    if opcao == 1:
+                        print(
+                            "Formas de pagamento:\n(1)Pix(5% de desconto)\n(2)Cartão de debito\n(3)Cartão de credito(Ate 12x sem juros)\n(4)Boleto Bancario"
+                        )
+                        opcao = int(input("Forma de pagamento selecionada:"))
+                        if opcao == 1:
+                            desconto = total_valor * 0.05
+                            valor_a_pagar = total_valor - desconto
+
+                            print(f"Valor a pagar com desconto: {valor_a_pagar}")
+                            print("Gerando QRCODE ou Chave Aleatoria...")
+                            print("Pagamento Concluido!!")
+                            vercarrinho = cliente_encontrado["carrinho"]
+                            for item in vercarrinho:
+                                item_pedidos = {
+                                    "name": item["name"],
+                                    "valor": item["valor"],
+                                    "quantidade": item["quantidade"],
+                                }
+                                cliente_encontrado["pedidos"].append(item_pedidos)
+                            cliente_encontrado["carrinho"] = []
+                            with open("dados_cliente.json", "w") as arquivo:
+                                        json.dump(clientes, arquivo)
+                    if opcao == 2:
+                        print("Seus cartões:")
+                        cartao_achados = cliente_encontrado["cartoes"]
+                        if not cartao_achados:
+                            print("Nenhum cartão localizado")
+                        else:
+                            for item in cartao_achados:
+                                print(item["numero"])
+                        print("Deseja cadastrar um cartão?\n(1)Sim;\n(2)Não;")
+                        opcao = int(input("Opção selecionada"))
+                        if opcao == 1:
+                            num_cartao = input("Número do cartão: ")
+                            name_cartao = input("Nome impresso no cartão: ")
+                            val_mes_cartao = input("Validade més: ")
+                            val_dia_cartao = input("Validade ano: ")
+                            code_cartao = input("Código de segurança: ")
+                            novo_cartao ={
+                                "nome": name_cartao,
+                                "numero": num_cartao,
+                                "validade_mes": val_mes_cartao,
+                                "validade_dia": val_dia_cartao,
+                                "codigo": code_cartao,
+                                "funcao": "Debito"
+                            }
+                            vercarrinho = cliente_encontrado["carrinho"]
+                            for item in vercarrinho:
+                                item_pedidos = {
+                                    "name": item["name"],
+                                    "valor": item["valor"],
+                                    "quantidade": item["quantidade"],
+                                }
+                            cliente_encontrado["pedidos"].append(item_pedidos)
+                            cliente_encontrado["cartoes"].append(novo_cartao)
+                            cliente_encontrado["carrinho"] = []
+                            with open("dados_cliente.json", "w") as arquivo:
+                                        json.dump(clientes, arquivo)
+
+                            print("Confirmando...")
+                            print("Processando...")
+                            print("Pagamento efetuado!!")
+                    if opcao == 3:
+                        print("Seus cartões:")
+                        cartao_achados = cliente_encontrado ["cartoes"]
+                        for cartao in cartao_achados:
+                            if "funcao" in cartao:
+                                funcao_cartao = cartao["funcao"]
+                                print(f"Função do Cartão: {funcao_cartao}")
+                            else:
+                                print("A função do cartão não esta especificada")
+
+
+
